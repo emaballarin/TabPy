@@ -243,8 +243,17 @@ class TabPyApp:
         self.credentials = {}
 
         pkg_path = os.path.dirname(tabpy.__file__)
+        
+        class CasedConfigParser(configparser.ConfigParser):
+            """
+            A case-sensitive drop-in replacement for configparser.ConfigParser
+            cfr.: https://stackoverflow.com/q/70097532
+            cfr.: https://stackoverflow.com/a/42407549
+            """
+            def optionxform(self, optionstr):
+                return optionstr
 
-        parser = configparser.ConfigParser(os.environ)
+        parser = CasedConfigParser(os.environ)
         logger.info(f"Parsing config file {config_file}")
 
         file_exists = False
